@@ -1,0 +1,30 @@
+.game-header
+  &__container
+    display: flex
+
+  &__item
+    flex: 3
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    div
+      overflow: hidden
+      text-overflow: ellipsis
+      display: -moz-box
+      -moz-box-orient: vertical
+      display: -webkit-box
+      -webkit-line-clamp: 2
+      -webkit-box-orient: vertical
+      line-clamp: 2
+      box-orient: vertical
+
+    &:active
+      opacity: 0.6
+
+    &:nth-child(2)
+      font-weight: bold
+      font-size: 20px
+      
+      flex: 1
+      justify-content: center

@@ -1,0 +1,37 @@
+.events
+  &__row
+    display: flex
+
+  &__player
+    font-size: 14px
+    text-overflow: ellipsis
+
+    flex: 1
+    display: flex
+    align-items: center
+
+    &:nth-child(1)
+      text-align: right
+      justify-content: flex-end
+    &:nth-child(3)
+      text-align: left
+
+  &__type
+    border-radius: 50%
+    background: var(--background_keyboard)
+    padding: 8px
+    margin: 6px 12px
+
+    position: relative
+
+    &::before
+      content: ''
+
+      background: var(--background_keyboard)
+
+      position: absolute
+      top: -16px
+      right: calc(50% - 2px)
+
+      width: 4px
+      height: 16px

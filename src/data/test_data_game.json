@@ -1,0 +1,48 @@
+{
+  "goals": [
+    [
+      { "playerHref": "/player51651", "playerName": "Маштаков Павел(1)" },
+      { "playerHref": "/player100644", "playerName": "Сердюк  Ярослав (1)" },
+      { "playerHref": "/player45297", "playerName": "Неудачин Дмитрий(1)" }
+    ],
+    [
+      { "playerHref": "/player66290", "playerName": "Божков    Евгений(1)" },
+      { "playerHref": "/player49453", "playerName": "Токмачев Дмитрий(1)" },
+      { "playerHref": "/player138375", "playerName": "Доронин Василий(1)" }
+    ]
+  ],
+  "assists": [
+    [{ "playerHref": "/player43275", "playerName": "Кошелев Александр (1)" }],
+    [
+      { "playerHref": "/player149313", "playerName": "Соколов Андрей (1)" },
+      { "playerHref": "/player43706", "playerName": "Шишлов Илья (1)" },
+      { "playerHref": "/player59490", "playerName": "Пигалин  Владимир  (1)" }
+    ]
+  ],
+  "fouls": [[], []],
+  "squads": [
+    [
+      { "playerHref": "/player99754", "playerName": "Вторников  Максим" },
+      { "playerHref": "/player45297", "playerName": "Неудачин Дмитрий" },
+      { "playerHref": "/player203134", "playerName": "Байдалиев Нурлан" },
+      { "playerHref": "/player74945", "playerName": "Гудов  Никита" },
+      { "playerHref": "/player117115", "playerName": "Гудов Глеб" },
+      { "playerHref": "/player43275", "playerName": "Кошелев Александр" },
+      { "playerHref": "/player51651", "playerName": "Маштаков Павел" },
+      { "playerHref": "/player100644", "playerName": "Сердюк  Ярослав" }
+    ],
+    [
+      { "playerHref": "/player145887", "playerName": "Колосов Алексей" },
+      { "playerHref": "/player66290", "playerName": "Божков    Евгений" },
+      { "playerHref": "/player138375", "playerName": "Доронин Василий" },
+      { "playerHref": "/player67749", "playerName": "Кондауров    Андрей" },
+      { "playerHref": "/player59490", "playerName": "Пигалин  Владимир" },
+      { "playerHref": "/player149313", "playerName": "Соколов Андрей" },
+      { "playerHref": "/player43706", "playerName": "Шишлов Илья" },
+      { "playerHref": "/player64318", "playerName": "Кузнецов Сергей" },
+      { "playerHref": "/player49453", "playerName": "Токмачев Дмитрий" }
+    ]
+  ],
+  "refery": "Грицких О.",
+  "place": "Арена №1, поле 1"
+}
