@@ -2,19 +2,19 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import api from "../../api"
 
-import { Tournament } from "../../types/Tournament"
+import { CityInfo } from "../../types/CityInfo"
 
 interface TournamentsState
 {
   loading : boolean
   error : boolean
-  tournaments : Tournament[]
+  cities : (CityInfo & {collapsed : boolean})[]
 }
 
 const initialState : TournamentsState = {
   loading : false,
   error : false,
-  tournaments : []
+  cities : []
 }
 
 export const requestTournaments = createAsyncThunk('tournaments/request', api.getTournaments)
@@ -22,7 +22,19 @@ export const requestTournaments = createAsyncThunk('tournaments/request', api.ge
 const tournamentsSlice = createSlice({
   name : 'tournaments',
   initialState,
-  reducers : {},
+  reducers : {
+    toggleCollapse(state,action)
+    {
+      state.cities = state.cities.map((c,i) => {
+        if(i === action.payload)
+        {
+          return {...c, collapsed : !c.collapsed}
+        }
+
+        return c
+      })
+    },
+  },
   extraReducers(builder)
   {
     builder
@@ -37,9 +49,10 @@ const tournamentsSlice = createSlice({
       .addCase(requestTournaments.fulfilled, (state, action) => {
         state.loading = false
         state.error = false
-        state.tournaments = action.payload
+        state.cities = (action.payload as CityInfo[]).map(city => ({...city, collapsed : true}))
       })
   },
 })
 
+export const {toggleCollapse} = tournamentsSlice.actions
 export default tournamentsSlice.reducer

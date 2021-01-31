@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { goBack, goForward } from '../../store/slices/navigation';
 import { RootState } from '../../store/rootReducer';
-import { clearActiveteam, goForwardToTeam } from '../../store/slices/team';
+import { clearActiveteam, goForwardToTeam,setActiveTab } from '../../store/slices/team';
 import { goBackToGame, setActiveGameInfo } from '../../store/slices/game';
 
 import PlainHeader from '../../components/Headers/PlainHeader';
@@ -38,12 +38,9 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
   id,
 }) => {
   const dispatch = useDispatch()
-  const { activeTeamSquad, loading } = useSelector((s:RootState) => s.team)
+  const { activeTeamSquad, loading, activeTeam, activeTab } = useSelector((s:RootState) => s.team)
   const {history} = useSelector((s:RootState) => s.navigation)
   const {activeTournament} = useSelector((s:RootState) => s.tournament)
-  const {activeTeam} = useSelector((s:RootState) => s.team)
-
-  const [activeTab, setActiveTab] = React.useState(0)
 
   const goToBack = () => {
     const isToGame = history[history.length-2] === 'game'
@@ -54,8 +51,9 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
   }
 
   const goToGame = (game : GameInfo) => {
-    dispatch(goForwardToTeam())
+    if(game.date === '-' && !game.score) return
 
+    dispatch(goForwardToTeam())
     dispatch(setActiveGameInfo(game))
     dispatch(goForward(GAME_PANEL))
   }
@@ -66,67 +64,64 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
         left={<PanelHeaderBack onClick={goToBack} />}
       >Команда</PanelHeader>
 
-      {activeTeam &&
+      {activeTeam && <>
         <PlainHeader
           logo={activeTeam.logo}
           title={activeTeam.name}
-        >
-          <HorizontalScroll>
-            <Tabs mode="buttons">
-              {TABS.map((tab,i) => {
-                return <TabsItem
-                  key={i}
-                  selected={activeTab === i}
-                  onClick={() => setActiveTab(i)}
-                >{tab}</TabsItem>
-              })}
-            </Tabs>
-          </HorizontalScroll>
-        </PlainHeader>
+        />
+        <HorizontalScroll>
+          <Tabs mode="buttons">
+            {TABS.map((tab,i) => {
+              return <TabsItem
+                key={i}
+                selected={activeTab === i}
+                onClick={() => dispatch(setActiveTab(i))}
+              >{tab}</TabsItem>
+            })}
+          </Tabs>
+        </HorizontalScroll>
+      </>}
+
+      
+      {activeTab === 0 && activeTeam &&
+        <GamesList
+          games={activeTournament!.calendar.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}
+          onGoToGame={goToGame}
+        />
       }
 
-      {activeTeam &&
-        <Group style={{marginTop:144}}>
-          {activeTab === 0 &&
-            <GamesList games={activeTournament!.calendar.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}/>
-          }
+      {activeTab === 1 && activeTeam &&
+        <GamesList
+          games={activeTournament!.results.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}
+          onGoToGame={goToGame}
+        />
+      }
 
-          {activeTab === 1 &&
-            <GamesList
-              games={activeTournament!.results.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}
-              onGoToGame={goToGame}
-            />
-          }
-
-          {activeTab === 2 &&
-            <Group>
-              <TableRow
-                isHeader={true}
-                title={'Игрок'}
-                values={['И', 'Г','А','Ж','К']}
-                colors={['','green','gray','orange','red']}
-              />
-              {
-                loading
-                  ? <Div><Spinner/></Div>
-                  : activeTeamSquad.map((player,i) => {
-                    return <TableRow
-                      key={i}
-                      title={player.playerName}
-                      photo={player.playerPhoto}
-                      description={player.amplua}
-                      values={[player.games,player.goals,player.assists,player.yc,player.rc].map(n=>''+n)}
-                      colors={['','green','gray','orange','red']}
-                      isDark={i % 2 === 0}
-                    />
-                  })
-              }
-            </Group>
+      {activeTab === 2 && activeTeam &&
+        <Group>
+          <TableRow
+            isHeader={true}
+            title={'Игрок'}
+            values={['И', 'Г','А','Ж','К']}
+            colors={['','green','gray','orange','red']}
+          />
+          {
+            loading
+              ? <Div><Spinner/></Div>
+              : activeTeamSquad.map((player,i) => {
+                return <TableRow
+                  key={i}
+                  title={player.playerName}
+                  photo={player.playerPhoto}
+                  description={player.amplua}
+                  values={[player.games,player.goals,player.assists,player.yc,player.rc].map(n=>''+n)}
+                  colors={['','green','gray','orange','red']}
+                  isDark={i % 2 === 0}
+                />
+              })
           }
         </Group>
       }
-
-
     </Panel>
   )
 }

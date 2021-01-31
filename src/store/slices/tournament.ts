@@ -6,11 +6,13 @@ interface TournamentState
 {
   activeTournamentName : string
   activeTournament : TournamentInfo | null
+  activeTab : number
 }
 
 const initialState : TournamentState = {
   activeTournamentName : '',
   activeTournament : null,
+  activeTab : 0
 }
 
 const tournamentSlice = createSlice({
@@ -28,11 +30,16 @@ const tournamentSlice = createSlice({
       state.activeTournament = null
       state.activeTournamentName = ''
     },
+    setActiveTab(state,action)
+    {
+      state.activeTab = action.payload
+    },
   },
 })
 
 export const {
   clearActiveTournament,
-  setActiveTournament
+  setActiveTournament,
+  setActiveTab,
 } = tournamentSlice.actions
 export default tournamentSlice.reducer

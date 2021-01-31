@@ -1,8 +1,8 @@
 import { BASE_URL } from "./BASE_URL"
 import { request } from "./request"
 
-export const getGames = async ({tournamentId, tourId, gameId} : {tournamentId:string,tourId:string,gameId:string}) => {
-  const url = `${BASE_URL}/games/${tournamentId}/${tourId}/${gameId}`
+export const getGames = async (gameId : number) => {
+  const url = `${BASE_URL}/games/${gameId}`
 
   return await request(url)
 }

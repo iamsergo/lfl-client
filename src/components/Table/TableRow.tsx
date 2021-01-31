@@ -44,7 +44,7 @@ const TableRow : React.FC<TableRowProps> = ({
         {values.map((value, i) => {
           return <div
             key={i}
-            style={{color:colors[i], marginRight:4, width:16, textAlign:'center'}}
+            style={{color:colors[i], marginRight:4, width:14, textAlign:'center', fontSize:14}}
           >{value}</div>
         })}
         </div>}

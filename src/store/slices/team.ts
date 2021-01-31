@@ -10,6 +10,7 @@ interface TeamState
   loading : boolean
   error : boolean
   activeTeamSquad : SquadInfo[]
+  activeTab : number
   
   activeTeam : ClubInfo | null
   teamHistory : ClubInfo[]
@@ -21,6 +22,7 @@ const initialState : TeamState = {
   activeTeam : null,
   activeTeamSquad: [],
   teamHistory : [],
+  activeTab : 0,
 }
 
 export const requestSquad = createAsyncThunk(
@@ -54,6 +56,10 @@ const teamSlice = createSlice({
       const activeTeam = state.teamHistory.pop()!
       state.activeTeam = activeTeam
     },
+    setActiveTab(state,action)
+    {
+      state.activeTab = action.payload
+    },
   },
   extraReducers(builder)
   {
@@ -79,6 +85,7 @@ const teamSlice = createSlice({
 export const {
   clearActiveteam,
   setActiveTeam,
+  setActiveTab,
 
   goForwardToTeam,
   goBackToTeam,

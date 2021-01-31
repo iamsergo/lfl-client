@@ -26,7 +26,7 @@ const GamesList : React.FC<GamesListProps> = ({
     <Group header={header && <Header>{header}</Header>}>
       {games.map((game,i) => {
         return <Cell
-          disabled={!onGoToGame}
+          disabled={!onGoToGame || (game.date === '-' && !game.score)}
           key={i}
           before={<div style={{display:'flex',marginRight:8,}}>
             <Avatar mode="image" src={game.homeLogo}/>

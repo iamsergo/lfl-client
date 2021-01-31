@@ -28,6 +28,10 @@ import EventRow from '../../components/EventRow';
 import { TEAM_PANEL } from '../../constans';
 
 import { ClubInfo } from '../../types/ClubInfo';
+import Prediction from '../../components/Prediction';
+import { requestDoPrediction, requestPredictions, clearPredictionsInfo } from '../../store/slices/predictions';
+import { addPrediction } from '../../store/slices/user';
+import { nowLessThen } from '../../utils/nowLessThen';
 
 interface GamePanelProps
 {
@@ -42,11 +46,18 @@ const GamePanel : React.FC<GamePanelProps> = ({
   const dispatch = useAppDispatch()
   const {history} = useSelector((s:RootState) => s.navigation)
   const {activeGameInfo,activeGameEvents,loading} = useSelector((s:RootState) => s.game)
-  // const {activeGameInfo,loading} = useSelector((s:RootState) => s.game)
   const {activeTournament} = useSelector((s:RootState) => s.tournament)
+  const {user} = useSelector((s:RootState) => s.user)
+  const {predictionsInfo, loading : loadingPrediction} = useSelector((s:RootState) => s.predictions)
 
   const [activeTab, setActiveTab] = React.useState(0)
   const [activeTeamTab, setActiveTeamTab] = React.useState(0)
+  const [userPrediction, setUserPrediction] = React.useState<0|1|null>(null)
+
+  const canPredict = nowLessThen(
+    activeGameInfo.date.split(' ')[0].split('.').map(s=>+s),
+    activeGameInfo.time.split(':').map(s=>+s)
+  )
 
   const goToBack = () => {
     const isToTeam = history[history.length-2] === 'team'
@@ -54,6 +65,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
     
     dispatch(goBack())
     dispatch(clearActiveGame())
+    dispatch(clearPredictionsInfo())
   }
 
   const goToTeam = (team : ClubInfo) => {
@@ -66,18 +78,37 @@ const GamePanel : React.FC<GamePanelProps> = ({
     dispatch(goForward(TEAM_PANEL))
 
     dispatch(clearActiveGame())
+    dispatch(clearPredictionsInfo())
 
     dispatch(requestSquad({tournamentId, clubId}))
+  }
+
+  const doPredict = (prediction : 0 | 1) => {
+    const matchId = +activeGameInfo.matchHref.replace('/match','').replace('/empty_protocol','')
+    dispatch(addPrediction({matchId, prediction}))
+    dispatch(requestDoPrediction({ matchId, prediction, userId : user!.id, }))
+      .then(_ => dispatch(requestPredictions(matchId)))
+    setUserPrediction(prediction)
   }
 
   React.useEffect(() => {
     if(activeGameEvents) return
 
-    const req = dispatch(requestGame({
-      gameId : activeGameInfo.matchHref.replace('/match',''),
-      tourId : ''+activeGameInfo.tour,
-      tournamentId : activeTournament!.tournamentId,
-    }))
+    if(activeGameInfo.matchHref.includes('/empty_protocol'))
+    {
+      const matchId = +activeGameInfo.matchHref.replace('/match','').replace('/empty_protocol','')
+      const prediction = user!.predictions.find(p => p.matchId === matchId)
+      if(prediction)
+      {
+        setUserPrediction(prediction.prediction)
+      }
+
+      if(!canPredict || !!prediction)
+        dispatch(requestPredictions(matchId))
+      return
+    }
+
+    const req = dispatch(requestGame(+activeGameInfo.matchHref.replace('/match','')))
     return () => {
       req.abort()
     }
@@ -106,7 +137,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
       <GameHeader
         home={home}
         away={away}
-        score={activeGameInfo.score}
+        score={!activeGameInfo.score ? '-:-' : activeGameInfo.score}
         onGoToTeam={goToTeam}
       />
 
@@ -116,7 +147,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
         place={activeGameEvents && activeGameEvents.place !== '-' ? activeGameEvents.place : null}
       />
 
-      {!loading && !noInformation &&
+      {!loading && !noInformation && activeGameInfo.score &&
         <HorizontalScroll>
           <Tabs mode="buttons">
             {TABS.map((tab,i) => {
@@ -130,6 +161,18 @@ const GamePanel : React.FC<GamePanelProps> = ({
         </HorizontalScroll>
       }
       
+      {!activeGameInfo.score &&
+        <Prediction
+          canPredict={canPredict}
+          userPrediction={userPrediction}
+          predictionsInfo={predictionsInfo}
+          loading={loadingPrediction}
+          title="Количество голов"
+          variants={['Больше 7', 'Не больше 7']}
+          onPrediction={doPredict}
+        />
+      }
+
       {noInformation && <Placeholder>Нет информации</Placeholder>}
       
       {loading && <Div><Spinner/></Div>}
