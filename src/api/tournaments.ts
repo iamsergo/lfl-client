@@ -6,3 +6,8 @@ export const getTournaments = async () => {
 
   return await request(url)
 }
+
+export const getTournament = async ({tournamentId,siteType} : {tournamentId : number, siteType : number}) => {
+  const url = `${BASE_URL}/tournaments/${tournamentId}/${siteType}`
+  return await request(url)
+}

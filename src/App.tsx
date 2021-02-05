@@ -16,17 +16,20 @@ import { goBack } from './store/slices/navigation';
 import { clearActiveGame, goBackToGame } from './store/slices/game';
 import { clearActiveteam, goBackToTeam } from './store/slices/team';
 import { clearPredictionsInfo } from './store/slices/predictions';
+import { clearActiveTournament, setActiveTab as setActiveTournamentTab } from './store/slices/tournament';
+import { setActiveTab as setActiveTeamTab } from './store/slices/team';
 
 const App = () => {
   const dispatch = useDispatch()
   const {activePanel, history} = useSelector((s:RootState) => s.navigation)
-  const {loading : loadingTournaments, error : errorTournaments, cities} = useSelector((s:RootState) => s.tournaments)
+  const {loading : loadingTournaments, cities} = useSelector((s:RootState) => s.tournaments)
+  const {loading : loadingTournament} = useSelector((s:RootState) => s.tournament)
   const {loading : loadingUser} = useSelector((s:RootState) => s.user)
 
   React.useEffect(() => {
     const initApp = async () => {
-      // const userInfo = await bridge.send('VKWebAppGetUserInfo')
-      const userInfo = {id : 17}
+      const userInfo = await bridge.send('VKWebAppGetUserInfo')
+      // const userInfo = {id : 17}
       dispatch(requestUser(userInfo.id))
       dispatch(requestTournaments())
       bridge.send('VKWebAppEnableSwipeBack').then(res=>res).catch(err=>err)
@@ -36,8 +39,6 @@ const App = () => {
   },[])
 
   const goToBack = () => {
-    
-    
     const currentPanel = history[history.length-1]
     const newPanel = history[history.length-2]
     
@@ -55,6 +56,16 @@ const App = () => {
       dispatch(clearPredictionsInfo())
     }
     
+    if(newPanel === 'tournaments')
+    {
+      dispatch(setActiveTournamentTab(0))
+      dispatch(clearActiveTournament())
+    }
+    else if(newPanel === 'tournament')
+    {
+      dispatch(setActiveTeamTab(0))
+    }
+
     dispatch(goBack())
   }
 
@@ -65,7 +76,7 @@ const App = () => {
           activePanel={activePanel}
           onSwipeBack={goToBack}
           history={history}
-          popout={(loadingTournaments || loadingUser) && <ScreenSpinner />}
+          popout={(loadingTournaments || loadingUser || loadingTournament) && <ScreenSpinner />}
         >
           <TournamentsPanel id={TOURNAMENTS_PANEL} cities={cities}/>
           <TournamentPanel id={TOURNAMENT_PANEL}/>

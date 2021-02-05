@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Group, 
+  Cell,
   HorizontalScroll, 
   List, 
   Panel, 
@@ -33,22 +33,17 @@ interface TournamentPanelProps
   id : string
 }
 
-const TABS = [ 'Таблица', 'Расписание', 'Результаты', 'Бомбардиры', 'Ассистенты' ]
+const TABS = [ 'Таблица', 'Расписание', 'Результаты']
 
 const TournamentPanel : React.FC<TournamentPanelProps> = ({
   id,
 }) => {
   const dispatch = useDispatch()
-  const {activeTournament,activeTournamentName,activeTab} = useSelector((s:RootState) => s.tournament)
+  const {activeTournament,activeTournamentName,activeTournamentCity,activeTab,activeSiteType,activeVkHref} = useSelector((s:RootState) => s.tournament)
 
   const goToTeam = (team : ClubInfo) => {
-    const tournamentId = activeTournament!.tournamentId
-    const clubId = team.href.replace('/club','')
-
     dispatch(setActiveTeam(team))
     dispatch(goForward(TEAM_PANEL))
-
-    dispatch(requestSquad({tournamentId, clubId}))
   }
 
   const goToGame = (game : GameInfo) => {
@@ -62,6 +57,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
   const goToTournaments = () => {
     dispatch(goBack())
     dispatch(clearActiveTournament())
+    dispatch(setActiveTab(0))
   }
 
   return(
@@ -71,7 +67,14 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
       >Турнир</PanelHeader>
       
       <PlainHeader
+        hrefs={[
+          activeSiteType === 0
+            ? `https://lfl.ru/tournament${activeTournament?.tournamentId}`
+            : `https://www.goalstream.org/season/${activeTournament?.tournamentId}`,
+          activeVkHref
+        ]}
         title={activeTournamentName}
+        city={activeTournamentCity}
       />
       <HorizontalScroll>
         <Tabs mode="buttons">
@@ -96,16 +99,24 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
           />
           {
             activeTournament.table.map((team,i) => {
-              return <TableRow
-                key={i}
-                n={i+1}
-                title={team.name}
-                photo={team.logo}
-                onClick={() => goToTeam(team)}
-                values={[team.win+team.draw+team.lose,team.win,team.draw,team.lose,team.points].map(n=>''+n)}
-                colors={['','green','orange','red']}
-                isDark={i % 2 === 0}
-              />
+              if(team.title === '') return
+
+              return team.title
+                ? <Cell
+                    key={i}
+                    disabled
+                    style={{fontWeight:'bold'}}
+                  >{team.title}</Cell>
+                : <TableRow
+                    key={i}
+                    n={team.place}
+                    title={team.name}
+                    photo={team.logo}
+                    onClick={() => goToTeam(team)}
+                    values={[team.win+team.draw+team.lose,team.win,team.draw,team.lose,team.points].map(n=>''+n)}
+                    colors={['','green','orange','red']}
+                    isDark={i % 2 === 0}
+                  />
             })
           }
         </List>
@@ -135,7 +146,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
           })
       }
 
-      {activeTab === 3 && activeTournament &&
+      {/* {activeTab === 3 && activeTournament &&
         <List>
           <TableRow
               isHeader={true}
@@ -183,7 +194,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
             })
           }
         </List>
-      }
+      } */}
 
 
     </Panel>

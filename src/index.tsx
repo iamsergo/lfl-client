@@ -12,9 +12,6 @@ import store from './store/store';
 
 import App from './App';
 
-import eruda from 'eruda'
-eruda.init()
-
 bridge.send('VKWebAppInit')
 bridge.subscribe(e => {
   if(e.detail.type === 'VKWebAppUpdateConfig')

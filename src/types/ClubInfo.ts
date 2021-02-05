@@ -1,5 +1,7 @@
 export interface ClubInfo
 {
+  title ?: string
+  place : number
   logo : string
   name : string
   href : string

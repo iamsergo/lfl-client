@@ -32,7 +32,8 @@ interface TeamPanelProps
   id : string
 }
 
-const TABS = [ 'Расписание', 'Результаты', 'Состав' ]
+// const TABS = [ 'Расписание', 'Результаты', 'Состав' ]
+const TABS = [ 'Расписание', 'Результаты']
 
 const TeamPanel : React.FC<TeamPanelProps> = ({
   id,
@@ -40,7 +41,7 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
   const dispatch = useDispatch()
   const { activeTeamSquad, loading, activeTeam, activeTab } = useSelector((s:RootState) => s.team)
   const {history} = useSelector((s:RootState) => s.navigation)
-  const {activeTournament} = useSelector((s:RootState) => s.tournament)
+  const {activeTournament,activeTournamentCity,activeTournamentName} = useSelector((s:RootState) => s.tournament)
 
   const goToBack = () => {
     const isToGame = history[history.length-2] === 'game'
@@ -68,6 +69,7 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
         <PlainHeader
           logo={activeTeam.logo}
           title={activeTeam.name}
+          city={activeTournamentCity}
         />
         <HorizontalScroll>
           <Tabs mode="buttons">
@@ -92,12 +94,13 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
 
       {activeTab === 1 && activeTeam &&
         <GamesList
+          teamHref={activeTeam.href}
           games={activeTournament!.results.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}
           onGoToGame={goToGame}
         />
       }
 
-      {activeTab === 2 && activeTeam &&
+      {/* {activeTab === 2 && activeTeam &&
         <Group>
           <TableRow
             isHeader={true}
@@ -121,7 +124,7 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
               })
           }
         </Group>
-      }
+      } */}
     </Panel>
   )
 }

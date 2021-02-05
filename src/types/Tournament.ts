@@ -6,5 +6,6 @@ export interface Tournament
   name : string
   logo : string
   city : string
-  data : TournamentInfo
+  siteType : number
+  // data : TournamentInfo
 }
