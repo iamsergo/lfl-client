@@ -88,7 +88,7 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
               centered
               before={<Icon24Copy/>}
               onClick={copyLink}
-            >Сслка на лигу</CellButton>
+            >Ссылка на лигу</CellButton>
           </>
         : <Placeholder>Ничего не найдено. Попробуйте найти турнир в
           <span

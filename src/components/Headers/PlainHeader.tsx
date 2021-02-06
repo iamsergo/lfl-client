@@ -21,7 +21,7 @@ const PlainHeader : React.FC<PlainHeaderProps> = ({
   hrefText,
 }) => {
   return(
-    <Div style={{display:'flex'}}>
+    <Div style={{display:'flex',marginTop:12}}>
       {logo && <Avatar mode="image" size={74} src={logo}/>}
       <div>
         <h3 style={{padding:0, margin:0, marginLeft: logo ? 8 : 0}}>{title}</h3>
