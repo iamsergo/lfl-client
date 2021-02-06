@@ -48,7 +48,7 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
   id,
   cities,
 }) => {
-  const platform = usePlatform()
+  const IS_ANDROID = window.location.href.includes('mobile_android')
   const dispatch = useDispatch()
 
   const goToTournament = (t : Tournament) => {
@@ -106,7 +106,7 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
     <Panel id={id}>
       <PanelHeader separator={false}>Главная</PanelHeader>
       
-      <Header>Информация</Header>
+      <Header style={{marginTop:8}}>Информация</Header>
       <Div>
         <Card>
           <Div>
@@ -131,12 +131,12 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
               onClick={addToFavourite}
             >Добавить в избранное</Button>
             <Button
-              style={{marginBottom:8,width:'100%',display:'flex',}}
+              style={{marginBottom:IS_ANDROID?8:0,width:'100%',display:'flex',}}
               size="l"
               before={<Icon28ReplyCircleFillGreen/>}
               onClick={share}
             >Поделиться</Button>
-            {platform === 'android' &&
+            {IS_ANDROID &&
               <Button
                 style={{marginBottom:0,width:'100%',display:'flex',}}
                 size="l"
