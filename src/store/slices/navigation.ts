@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { 
   GAME_PANEL, 
+  LEAGUE_PANEL, 
   TEAM_PANEL, 
   TOURNAMENTS_PANEL, 
   TOURNAMENT_PANEL 
@@ -12,6 +13,7 @@ type Panel =
   | typeof TOURNAMENT_PANEL 
   | typeof GAME_PANEL 
   | typeof TEAM_PANEL
+  | typeof LEAGUE_PANEL
 
 interface NavigationState
 {
@@ -28,6 +30,12 @@ const navigationSlice = createSlice({
   name : 'navigation',
   initialState,
   reducers : {
+    setNavigation(state, action)
+    {
+      const data = action.payload
+      state.activePanel = data.activePanel
+      state.history = data.history
+    },
     goForward(state, action)
     {
       const newPanel = action.payload
@@ -43,5 +51,5 @@ const navigationSlice = createSlice({
   }
 })
 
-export const {goBack, goForward} = navigationSlice.actions
+export const {goBack, goForward, setNavigation} = navigationSlice.actions
 export default navigationSlice.reducer

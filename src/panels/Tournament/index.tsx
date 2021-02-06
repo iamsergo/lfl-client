@@ -67,12 +67,11 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
       >Турнир</PanelHeader>
       
       <PlainHeader
-        hrefs={[
-          activeSiteType === 0
+        hrefText={'Сайт'}
+        href={activeSiteType === 0
             ? `https://lfl.ru/tournament${activeTournament?.tournamentId}`
-            : `https://www.goalstream.org/season/${activeTournament?.tournamentId}`,
-          activeVkHref
-        ]}
+            : `https://www.goalstream.org/season/${activeTournament?.tournamentId}`
+        }
         title={activeTournamentName}
         city={activeTournamentCity}
       />

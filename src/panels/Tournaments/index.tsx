@@ -29,11 +29,12 @@ import { useDispatch } from 'react-redux';
 import { goForward } from '../../store/slices/navigation';
 import { requestTournament, setActiveTournament } from '../../store/slices/tournament';
 
-import { TOURNAMENT_PANEL } from '../../constans';
+import { LEAGUE_PANEL, TOURNAMENT_PANEL } from '../../constans';
 
 import { CityInfo } from '../../types/CityInfo';
 import { Tournament } from '../../types/Tournament';
 import { toggleCollapse } from '../../store/slices/tournaments';
+import { setActiveLeague } from '../../store/slices/league';
 
 interface TournamentsPanelProps
 {
@@ -51,10 +52,9 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
   const IS_ANDROID = window.location.href.includes('mobile_android')
   const dispatch = useDispatch()
 
-  const goToTournament = (t : Tournament) => {
-    dispatch(goForward(TOURNAMENT_PANEL))
-    dispatch(setActiveTournament(t))
-    dispatch(requestTournament({tournamentId : +t.id, siteType : t.siteType }))
+  const goToLeague = (league : CityInfo) => {
+    dispatch(goForward(LEAGUE_PANEL))
+    dispatch(setActiveLeague(league))
   }
 
   const [snackbar, setSnackbar] = React.useState<React.ReactElement | null>(null)
@@ -149,7 +149,7 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
       </Div>
 
       <Header>Турниры</Header>
-      {cities.map((city, i) => {
+      {/* {cities.map((city, i) => {
         return <Div key={i} style={{paddingBottom: i===cities.length-1 ? 12 : 0}}>
           <Card>
             <div
@@ -177,6 +177,14 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
             }
           </Card>
         </Div>
+      })} */}
+      {cities.map((city,i) => {
+        return <Cell
+          key={i}
+          before={<Avatar size={32} mode="image" src={city.tournaments[0].logo} />}
+          after={<Icon28ChevronRightOutline/>}
+          onClick={() => goToLeague(city)}
+        >{city.title}</Cell>
       })}
 
       {snackbar}

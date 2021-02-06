@@ -8,15 +8,17 @@ interface PlainHeaderProps
   logo ?: string
   title : string
   league ?: string
-  city : string
-  hrefs ?: string[]
+  city ?: string
+  href ?: string
+  hrefText ?: string
 }
 
 const PlainHeader : React.FC<PlainHeaderProps> = ({
   logo,
   title,
   city,
-  hrefs,
+  href,
+  hrefText,
 }) => {
   return(
     <Div style={{display:'flex'}}>
@@ -24,17 +26,8 @@ const PlainHeader : React.FC<PlainHeaderProps> = ({
       <div>
         <h3 style={{padding:0, margin:0, marginLeft: logo ? 8 : 0}}>{title}</h3>
         <h5 style={{padding:0, margin:0,marginTop:4,marginLeft: logo ? 8 : 0,color:'gray'}}>{city}</h5>
-        {hrefs &&
-          <div style={{fontSize:14,marginTop:4}}>
-            {hrefs.map((href,i) => {
-              return href && <Link key={i} style={{marginRight:4}} href={href}>
-                {['Сайт','Группа'][i]}
-              </Link>
-            })}
-          </div>
-        }
+        {href && <Link style={{marginLeft:logo ? 8 : 0}} href={href}>{hrefText}</Link>}
       </div>
-
     </Div>
   )
 }

@@ -9,29 +9,47 @@ import GamePanel from './panels/Game';
 import TournamentsPanel from './panels/Tournaments';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
-import { GAME_PANEL, TEAM_PANEL, TOURNAMENTS_PANEL, TOURNAMENT_PANEL } from './constans';
+import { GAME_PANEL, LEAGUE_PANEL, TEAM_PANEL, TOURNAMENTS_PANEL, TOURNAMENT_PANEL } from './constans';
 import { requestTournaments } from './store/slices/tournaments';
 import { requestUser } from './store/slices/user';
 import { goBack } from './store/slices/navigation';
 import { clearActiveGame, goBackToGame } from './store/slices/game';
 import { clearActiveteam, goBackToTeam } from './store/slices/team';
 import { clearPredictionsInfo } from './store/slices/predictions';
+import { setNavigation } from './store/slices/navigation';
 import { clearActiveTournament, setActiveTab as setActiveTournamentTab } from './store/slices/tournament';
 import { setActiveTab as setActiveTeamTab } from './store/slices/team';
+import LeaguePanel from './panels/League';
+import { useAppDispatch } from './store/store';
+import { setActiveLeague } from './store/slices/league';
+import { CityInfo } from './types/CityInfo';
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {activePanel, history} = useSelector((s:RootState) => s.navigation)
   const {loading : loadingTournaments, cities} = useSelector((s:RootState) => s.tournaments)
   const {loading : loadingTournament} = useSelector((s:RootState) => s.tournament)
   const {loading : loadingUser} = useSelector((s:RootState) => s.user)
 
   React.useEffect(() => {
+    const initPanels = (cities : CityInfo[]) => {
+      const hash = window.location.hash
+      if(hash)
+      {
+        const id = +hash.slice(1).replace('league','')
+        dispatch(setActiveLeague(cities.find(c => c.id === id)))
+        dispatch(setNavigation({activePanel:LEAGUE_PANEL,history:[TOURNAMENTS_PANEL,LEAGUE_PANEL]}))
+      }
+    }
+
     const initApp = async () => {
+
+
       const userInfo = await bridge.send('VKWebAppGetUserInfo')
       // const userInfo = {id : 17}
       dispatch(requestUser(userInfo.id))
       dispatch(requestTournaments())
+        .then((action) => initPanels(action.payload))
       bridge.send('VKWebAppEnableSwipeBack').then(res=>res).catch(err=>err)
     }
     
@@ -56,7 +74,7 @@ const App = () => {
       dispatch(clearPredictionsInfo())
     }
     
-    if(newPanel === 'tournaments')
+    if(newPanel === 'league')
     {
       dispatch(setActiveTournamentTab(0))
       dispatch(clearActiveTournament())
@@ -79,6 +97,7 @@ const App = () => {
           popout={(loadingTournaments || loadingUser || loadingTournament) && <ScreenSpinner />}
         >
           <TournamentsPanel id={TOURNAMENTS_PANEL} cities={cities}/>
+          <LeaguePanel id={LEAGUE_PANEL} />
           <TournamentPanel id={TOURNAMENT_PANEL}/>
           <GamePanel id={GAME_PANEL}/>
           <TeamPanel id={TEAM_PANEL}/>

@@ -7,6 +7,7 @@ import team from './slices/team'
 import game from './slices/game'
 import user from './slices/user'
 import predictions from './slices/predictions'
+import league from './slices/league'
 
 const rootReducer = combineReducers({
   navigation,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   game,
   user,
   predictions,
+  league,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
