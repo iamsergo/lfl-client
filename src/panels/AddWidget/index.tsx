@@ -124,8 +124,11 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       const games = tournament.calendar.length !== 0 ? tournament.calendar.slice(0,4) : tournament.results.slice(0,4)
       const matches = JSON.stringify(games.map(game => {
         const score = !game.score ? [0,0] : game.score.split(':').map(s=>+s)
+        const date = game.date && game.date !== '-'
+          ? `${game.date.replace('.2021','').replace('.2020','').replace(' ','')}${game.time ? `, ${game.time}` : ''}`
+          : (game.score ? 'Итог' : 'Информации нет')
         return createMatch({
-          date:`${game.date.replace('.2021','').replace('.2020','').replace(' ','')}, ${game.time}`,
+          date,
           home:game.homeName,
           away:game.awayName,
           score,
@@ -195,72 +198,6 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       setError('')
     }
   }
-
-
-
-  // React.useEffect(() => {
-  //   const app_id = 7746401
-  //   const group_id = 202380422
-  //   const v = '5.126'
-  //   const trying = async () => {
-  //     try
-  //     {
-  //       const {access_token} = await bridge.send("VKWebAppGetCommunityToken", {app_id,group_id,scope:'app_widget'})
-        
-  //       const createMatch = ({
-  //         date, home, away, score
-  //       } : {
-  //         date : string,
-  //         home : string,
-  //         away : string,
-  //         score : number[]
-  //       }) => {
-  //         return {
-  //           state : date,
-  //           team_a : { name : home },
-  //           team_b : { name : away },
-  //           score : { team_a : score[0], team_b : score[1] }
-  //         }
-  //       }
-
-  //       const code = `
-  //             return {
-  //               "title_counter" : 10,
-  //               "title": "Name of widget",
-  //               "title_url": "https://vk.com/app123456#source=from_title",
-  //               "more": "Весь список",
-  //               "more_url": "https://vk.com/app123456#source=from_footer",
-  //               "matches": ${JSON.stringify([
-  //                 createMatch({date:'15.01.21 (пн), 20:45',home:'HOME1',away:'AWAY AWAY AWAY 1',score:[5,3]}),
-  //                 createMatch({date:'15 февраля 2021, пн, 20:99',home:'Home sdds fsd2',away:'away2',score:[3,4]})
-  //               ])}
-  //             };
-  //           `
-
-  //       await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{
-  //         group_id, type : 'matches', code,
-  //       })
-
-  //       // await bridge.send('VKWebAppCallAPIMethod',{
-  //       //   method : 'appWidgets.update',
-  //       //   params : {
-  //       //     v,
-  //       //     access_token,
-  //       //     type : 'matches',
-  //       //     code,
-  //       //   }
-  //       // })
-  //     }
-  //     catch(e)
-  //     {
-  //       console.log('ERROR : ',e.error_data)
-  //     }
-  //   }
-
-  //   // trying()
-  // },[])
-
-  
 
   return(
     <Panel id={id}>
