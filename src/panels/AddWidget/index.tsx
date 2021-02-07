@@ -88,7 +88,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
   }
 
   const changeGroup = (e : React.FormEvent<HTMLSelectElement>) => {
-    if(accessToken) setAccessToken('')
+    setAccessToken('')
     setActiveGroup(+e.currentTarget.value)
   }
 
@@ -248,7 +248,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         }
       </>}
 
-      {step === 2 && <>
+      {step === 2 && !loading && <>
           <FormItem top="Выберите лигу для отображения">
           <NativeSelect
             onChange={changeTournament}
