@@ -34,8 +34,8 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
   id,
 }) => {
   const dispatch = useDispatch()
-  // const {user} = useSelector((s:RootState) => s.user)
-  const user = {id:612381684}
+  const {user} = useSelector((s:RootState) => s.user)
+  // const user = {id:612381684}
   const {activeLeague} = useSelector((s:RootState) => s.league)
 
   const goToLeague = () => {
@@ -268,7 +268,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         left={<PanelHeaderBack onClick={goToLeague} />}
       >Виджет</PanelHeader>
 
-      {loading && <Div><Spinner/></Div>}
+      {loading && <Div style={{marginTop:28}}><Spinner/></Div>}
       {error && <h1>Error :(</h1>}
 
       {step === 0 && !loading && <>
@@ -338,7 +338,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         </Div>
       </>}
 
-      {step === 3 && <>
+      {step === 3 && !loading && <>
         <Placeholder
           icon={<Icon56CheckCircleOutline fill="green"/>}
         >
