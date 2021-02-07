@@ -9,7 +9,7 @@ import GamePanel from './panels/Game';
 import TournamentsPanel from './panels/Tournaments';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
-import { GAME_PANEL, LEAGUE_PANEL, TEAM_PANEL, TOURNAMENTS_PANEL, TOURNAMENT_PANEL } from './constans';
+import { ADD_WIDGET_PANEL, GAME_PANEL, LEAGUE_PANEL, TEAM_PANEL, TOURNAMENTS_PANEL, TOURNAMENT_PANEL } from './constans';
 import { requestTournaments } from './store/slices/tournaments';
 import { requestUser } from './store/slices/user';
 import { goBack } from './store/slices/navigation';
@@ -23,6 +23,7 @@ import LeaguePanel from './panels/League';
 import { useAppDispatch } from './store/store';
 import { setActiveLeague } from './store/slices/league';
 import { CityInfo } from './types/CityInfo';
+import AddWidgetPanel from './panels/AddWidget';
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -43,8 +44,6 @@ const App = () => {
     }
 
     const initApp = async () => {
-
-
       const userInfo = await bridge.send('VKWebAppGetUserInfo')
       // const userInfo = {id : 17}
       dispatch(requestUser(userInfo.id))
@@ -101,6 +100,7 @@ const App = () => {
           <TournamentPanel id={TOURNAMENT_PANEL}/>
           <GamePanel id={GAME_PANEL}/>
           <TeamPanel id={TEAM_PANEL}/>
+          <AddWidgetPanel id={ADD_WIDGET_PANEL} />
         </View>
       </AppRoot>
     </ConfigProvider>

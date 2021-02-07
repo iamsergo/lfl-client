@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { 
+  ADD_WIDGET_PANEL,
   GAME_PANEL, 
   LEAGUE_PANEL, 
   TEAM_PANEL, 
@@ -14,6 +15,7 @@ type Panel =
   | typeof GAME_PANEL 
   | typeof TEAM_PANEL
   | typeof LEAGUE_PANEL
+  | typeof ADD_WIDGET_PANEL
 
 interface NavigationState
 {

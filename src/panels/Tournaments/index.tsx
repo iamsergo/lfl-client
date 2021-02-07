@@ -86,6 +86,7 @@ const TournamentsPanel : React.FC<TournamentsPanelProps> = ({
   const goToGroup = () => {
     let a = document.createElement('a')
     a.href = GROUP_HREF
+    a.target = '_blank'
     a.click()
     a.remove()
   }

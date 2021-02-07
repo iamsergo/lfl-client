@@ -56,7 +56,7 @@ const GamesList : React.FC<GamesListProps> = ({
             <Avatar mode="image" src={game.awayLogo}/>
           </div>}
           after={game.score && <Counter mode="primary" style={{padding:4,background}}>{game.score}</Counter>}
-          description={game.date !== '-' && 
+          description={game.date && game.date !== '-' && 
             <div>
               <div>{game.date}, {game.time}</div>
               {game.place !== '-' && <div>{game.place}</div>}

@@ -26,7 +26,7 @@ const PlainHeader : React.FC<PlainHeaderProps> = ({
       <div>
         <h3 style={{padding:0, margin:0, marginLeft: logo ? 8 : 0}}>{title}</h3>
         <h5 style={{padding:0, margin:0,marginTop:4,marginLeft: logo ? 8 : 0,color:'gray'}}>{city}</h5>
-        {href && <Link style={{marginLeft:logo ? 8 : 0}} href={href}>{hrefText}</Link>}
+        {href && <Link target="_blank" style={{marginLeft:logo ? 8 : 0}} href={href}>{hrefText}</Link>}
       </div>
     </Div>
   )

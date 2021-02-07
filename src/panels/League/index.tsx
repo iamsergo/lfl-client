@@ -11,13 +11,13 @@ import {
   Placeholder,
   Snackbar,
 } from '@vkontakte/vkui';
-import { Icon16DoneCircle, Icon28ChevronRightOutline,Icon24Copy } from '@vkontakte/icons';
+import { Icon16DoneCircle, Icon28ChevronRightOutline,Icon24Copy, Icon24Add } from '@vkontakte/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { goBack, goForward } from '../../store/slices/navigation';
 import { RootState } from '../../store/rootReducer';
 
-import { TOURNAMENT_PANEL } from '../../constans';
+import { ADD_WIDGET_PANEL, TOURNAMENT_PANEL } from '../../constans';
 import PlainHeader from '../../components/Headers/PlainHeader';
 import { requestTournament, setActiveTournament } from '../../store/slices/tournament';
 import { Tournament } from '../../types/Tournament';
@@ -63,6 +63,10 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
       .catch(e=>e)
   }
 
+  const goToAddWidget = () => {
+    dispatch(goForward(ADD_WIDGET_PANEL))
+  }
+
   return(
     <Panel id={id}>
       <PanelHeader
@@ -71,12 +75,14 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
 
       {activeLeague
         ? <>
+
             <PlainHeader
               href={activeLeague.vkHref}
               hrefText={'Группа'}
               logo={activeLeague.tournaments[0].logo}
               title={activeLeague.title}
             />
+
             {activeLeague.tournaments.map((t,i) => {
               return <Cell
                 key={i}
@@ -84,11 +90,15 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
                 onClick={() => goToTournament(t)}
               >{t.name}</Cell>
             })}
+
             <CellButton
-              centered
               before={<Icon24Copy/>}
               onClick={copyLink}
-            >Ссылка на лигу</CellButton>
+            >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
+            <CellButton
+              before={<Icon24Add/>}
+              onClick={goToAddWidget}
+            >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
           </>
         : <Placeholder>Ничего не найдено. Попробуйте найти турнир в
           <span
