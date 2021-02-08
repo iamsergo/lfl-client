@@ -147,6 +147,8 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
 
       await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'matches', code,})
 
+      console.log('GROUP_ID : ', activeGroup)
+
       await api.addWidget({
         user_id : user!.id,
         group_id : activeGroup!,

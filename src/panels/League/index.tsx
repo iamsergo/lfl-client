@@ -95,10 +95,10 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
               before={<Icon24Copy/>}
               onClick={copyLink}
             >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
-            <CellButton
+            {/* <CellButton
               before={<Icon24Add/>}
               onClick={goToAddWidget}
-            >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
+            >&nbsp;&nbsp;Добавить виджет в группу</CellButton> */}
           </>
         : <Placeholder>Ничего не найдено. Попробуйте найти турнир в
           <span
