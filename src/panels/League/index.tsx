@@ -32,6 +32,7 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
 }) => {
   const dispatch = useDispatch()
   const {activeLeague} = useSelector((s:RootState) => s.league)
+  const {user} = useSelector((s:RootState) => s.user)
 
   const goToBack = () => {
     dispatch(goBack())
@@ -95,10 +96,12 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
               before={<Icon24Copy/>}
               onClick={copyLink}
             >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
-            {/* <CellButton
-              before={<Icon24Add/>}
-              onClick={goToAddWidget}
-            >&nbsp;&nbsp;Добавить виджет в группу</CellButton> */}
+            {user && user.id === 612381684 &&
+              <CellButton
+                before={<Icon24Add/>}
+                onClick={goToAddWidget}
+              >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
+            }
           </>
         : <Placeholder>Ничего не найдено. Попробуйте найти турнир в
           <span

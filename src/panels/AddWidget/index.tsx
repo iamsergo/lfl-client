@@ -21,6 +21,7 @@ import { goBack } from '../../store/slices/navigation';
 import { RootState } from '../../store/rootReducer';
 import api from '../../api';
 import { TournamentInfo } from '../../types/TournamentInfo';
+import { BASE_URL } from '../../api/BASE_URL';
 
 interface AddWidgetPanelProps
 {
@@ -106,12 +107,13 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       })
 
       const createMatch = ({
-        date, home, away, score
+        date, home, away, score, url
       } : {
         date : string,
         home : string,
         away : string,
         score : number[]
+        url : string
       }) => {
         return {
           state : date,
@@ -121,8 +123,10 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         }
       }
 
+      const leagueLink = `https://vk.com/app7746401#league${activeLeague?.id}`
+
       const games = tournament.calendar.length !== 0 ? tournament.calendar.slice(0,4) : tournament.results.slice(0,4)
-      const matches = JSON.stringify(games.map(game => {
+      const matches = games.map(game => {
         const score = !game.score ? [0,0] : game.score.split(':').map(s=>+s)
         const date = game.date && game.date !== '-'
           ? `${game.date.replace('.2021','').replace('.2020','').replace(' ','')}${game.time ? `, ${game.time}` : ''}`
@@ -132,22 +136,21 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
           home:game.homeName,
           away:game.awayName,
           score,
+          url : leagueLink,
         })
-      }) )
+      })
 
-      const code = `
-            return {
-              "title": "Матчи",
-              "title_url": "https://vk.com/app7746401#league${activeLeague?.id}",
-              "more": "Весь список",
-              "more_url": "https://vk.com/app7746401#league${activeLeague?.id}",
-              "matches": ${matches}
-            };
-          `
+      const data = JSON.stringify({
+        title: "Матчи",
+        title_url: leagueLink,
+        more: "Весь список",
+        more_url: leagueLink,
+        matches,
+      })
+
+      const code = `return ${data};`
 
       await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'matches', code,})
-
-      console.log('GROUP_ID : ', activeGroup)
 
       await api.addWidget({
         user_id : user!.id,
@@ -168,8 +171,10 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
     }
     finally
     {
-      setLoading(false)
+      setLoading(false)      
     }
+    const URL = `${BASE_URL}/widgets/update/${activeGroup}`
+    await fetch(URL,{method:'PUT'})
   }
 
   const requestToken = async () => {
