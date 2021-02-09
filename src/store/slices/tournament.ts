@@ -11,6 +11,7 @@ interface TournamentState
   activeVkHref : string
   activeTournament : TournamentInfo | null
   activeTab : number
+  activeDivisionId ?: number
 
   loading : boolean
   error : boolean
@@ -42,6 +43,7 @@ const tournamentSlice = createSlice({
       state.activeSiteType = activeTournament.siteType
       state.activeVkHref = activeTournament.vkHref
       state.activeTournamentCity = activeTournament.city
+      state.activeDivisionId = activeTournament.divisionId
     },
     clearActiveTournament(state)
     {

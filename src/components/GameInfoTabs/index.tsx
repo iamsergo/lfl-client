@@ -16,7 +16,7 @@ const GameInfoTabs : React.FC<GameInfoTabsProps> = ({
   place,
 }) => {
   return(
-    <HorizontalScroll>
+    <HorizontalScroll style={{marginBottom:20}}>
       <Tabs mode="buttons">
         {date && 
           <TabsItem selected={true} className="game-info__item">

@@ -17,9 +17,18 @@ const EventRow : React.FC<EventRowProps> = ({
 }) => {
   return(
     <div className="events__row">
-      <div className="events__player">{minute !== 0 && !isHome ? minute : ''}{isHome && playerName}</div>
-      <div className="events__type">{eventType}</div>
-      <div className="events__player">{!isHome && playerName}{minute !== 0 && isHome ? minute : ''}</div>
+      {playerName.includes('(аг)')
+        ? <>
+          <div className="events__player">{minute !== 0 && isHome ? minute : ''}{!isHome && playerName}</div>
+          <div className="events__type">{eventType}</div>
+          <div className="events__player">{isHome && playerName}{minute !== 0 && !isHome ? minute : ''}</div>
+        </>
+        : <>
+          <div className="events__player">{minute !== 0 && !isHome ? minute : ''}{isHome && playerName}</div>
+          <div className="events__type">{eventType}</div>
+          <div className="events__player">{!isHome && playerName}{minute !== 0 && isHome ? minute : ''}</div>
+        </>
+      }
     </div>
   )
 }

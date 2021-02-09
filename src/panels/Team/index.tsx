@@ -88,7 +88,7 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
       {activeTab === 0 && activeTeam &&
         <GamesList
           games={activeTournament!.calendar.filter(g => g.homeHref === activeTeam.href || g.awayHref === activeTeam.href )}
-          onGoToGame={goToGame}
+          // onGoToGame={goToGame}
         />
       }
 

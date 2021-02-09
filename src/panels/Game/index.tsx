@@ -5,6 +5,7 @@ import {
   Div,
   HorizontalScroll,
   List,
+  Link,
   Panel,
   PanelHeader,
   PanelHeaderBack,
@@ -45,8 +46,8 @@ const GamePanel : React.FC<GamePanelProps> = ({
 }) => {
   const dispatch = useAppDispatch()
   const {history} = useSelector((s:RootState) => s.navigation)
-  const {activeGameInfo,activeGameEvents,loading} = useSelector((s:RootState) => s.game)
-  const {activeTournament} = useSelector((s:RootState) => s.tournament)
+  const {activeGameInfo,activeGameEvents,loading, error} = useSelector((s:RootState) => s.game)
+  const {activeTournament,activeSiteType,activeDivisionId} = useSelector((s:RootState) => s.tournament)
   const {user} = useSelector((s:RootState) => s.user)
   const {predictionsInfo, loading : loadingPrediction} = useSelector((s:RootState) => s.predictions)
 
@@ -80,7 +81,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
     dispatch(clearActiveGame())
     dispatch(clearPredictionsInfo())
 
-    dispatch(requestSquad({tournamentId, clubId}))
+    // dispatch(requestSquad({tournamentId, clubId}))
   }
 
   const doPredict = (prediction : 0 | 1) => {
@@ -108,7 +109,26 @@ const GamePanel : React.FC<GamePanelProps> = ({
       return
     }
 
-    const req = dispatch(requestGame(+activeGameInfo.matchHref.replace('/match','')))
+    const postfix = activeSiteType === 0
+      ? (activeDivisionId
+        ? `/division${activeDivisionId}/tour${activeGameInfo.tour}`
+        : `/tournament${activeTournament!.tournamentId}/tour${activeGameInfo.tour}`
+      )
+      : activeGameInfo.matchHref
+
+    const matchId = activeSiteType === 0 ? activeGameInfo.matchHref.replace('/match','') : ''
+
+    console.log({
+      postfix,
+      siteType : activeSiteType,
+      matchId
+    })
+
+    const req = dispatch(requestGame({
+      postfix,
+      siteType : activeSiteType,
+      matchId,
+    }) )
     return () => {
       req.abort()
     }
@@ -147,7 +167,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
         place={activeGameEvents && activeGameEvents.place !== '-' ? activeGameEvents.place : null}
       />
 
-      {!loading && !noInformation && activeGameInfo.score &&
+      {/* {!loading && !noInformation && activeGameInfo.score &&
         <HorizontalScroll>
           <Tabs mode="buttons">
             {TABS.map((tab,i) => {
@@ -159,9 +179,9 @@ const GamePanel : React.FC<GamePanelProps> = ({
             })}
           </Tabs>
         </HorizontalScroll>
-      }
+      } */}
       
-      {!activeGameInfo.score &&
+      {/* {!activeGameInfo.score &&
         <Prediction
           canPredict={canPredict}
           userPrediction={userPrediction}
@@ -171,11 +191,28 @@ const GamePanel : React.FC<GamePanelProps> = ({
           variants={['Больше 7', 'Не больше 7']}
           onPrediction={doPredict}
         />
+      } */}
+
+      {error &&
+        <Placeholder>
+          Произошла ошибка, попробуйте посмотреть информацию на
+          <Link
+            href={activeSiteType === 0
+              ? (activeDivisionId
+                ? `https://www.lfl.ru/division${activeDivisionId}/tour${activeGameInfo.tour}`
+                : `https://www.lfl.ru/tournament${activeTournament!.tournamentId}/tour${activeGameInfo.tour}`
+              )
+              : `http://www.goalstream.org${activeGameInfo.matchHref}`}
+          >&nbsp;сайте</Link>
+        </Placeholder>
       }
 
-      {noInformation && <Placeholder>Нет информации</Placeholder>}
+      {activeGameEvents && activeGameEvents.events.length === 0 && <Placeholder>Нет информации</Placeholder>}
       
-      {loading && <Div><Spinner/></Div>}
+      {loading && <>
+        <Div><Spinner/></Div>
+        <Placeholder>Загрузка займет ~ 12 секунд. Пожалуйста, подождите</Placeholder>
+      </>}
 
 
       {!loading && activeTab === 0 && activeGameEvents &&
@@ -196,7 +233,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
         })
       }
 
-      {!loading && activeTab === 1 && <>
+      {/* {!loading && activeTab === 1 && <>
         <Tabs mode="buttons">
           {[activeGameInfo.homeName,activeGameInfo.awayName].map((team,i) => {
             return <TabsItem
@@ -217,7 +254,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
             })
           }
         </List>
-      </>}
+      </>} */}
     </Panel>
   )
 }

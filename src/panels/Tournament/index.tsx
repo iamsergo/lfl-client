@@ -128,7 +128,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
               key={i}
               header={`${tour} ТУР`}
               games={games}
-              onGoToGame={goToGame} // !!!!
+              // onGoToGame={goToGame} // !!!!
             />
           })
       }

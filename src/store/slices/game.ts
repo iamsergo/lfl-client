@@ -43,7 +43,7 @@ const initialState : GameState = {
 
 export const requestGame = createAsyncThunk(
   'game/request',
-  (gameId : number) => api.getGames(gameId)
+  (gameParams: {matchId?:string,postfix:string,siteType:number}) => api.getGames(gameParams)
 )
 
 const gameSlice = createSlice({

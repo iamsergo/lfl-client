@@ -7,5 +7,6 @@ export interface Tournament
   logo : string
   city : string
   siteType : number
+  divisionId ?: number
   // data : TournamentInfo
 }

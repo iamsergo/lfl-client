@@ -48,8 +48,8 @@ const GamesList : React.FC<GamesListProps> = ({
         }
 
         return <Cell
-          // disabled={!onGoToGame || (game.date === '-' && !game.score)}
-          disabled={true}
+          disabled={!onGoToGame || (game.date === '-' && !game.score)}
+          // disabled={true}
           key={i}
           before={<div style={{display:'flex',marginRight:8,}}>
             <Avatar mode="image" src={game.homeLogo}/>
@@ -62,7 +62,7 @@ const GamesList : React.FC<GamesListProps> = ({
               {game.place !== '-' && <div>{game.place}</div>}
             </div>
           }
-          // onClick={() => onGoToGame && onGoToGame(game)}
+          onClick={() => onGoToGame && onGoToGame(game)}
         ><div><div>{game.homeName}</div><div>{game.awayName}</div></div></Cell>
       })}
     </Group>
