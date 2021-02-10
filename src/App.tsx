@@ -33,14 +33,27 @@ const App = () => {
   const {loading : loadingUser} = useSelector((s:RootState) => s.user)
 
   React.useEffect(() => {
-    const initPanels = (cities : CityInfo[]) => {
-      const hash = window.location.hash
-      if(hash)
+    const initPanels = async (cities : CityInfo[]) => {
+      try
       {
-        const id = +hash.slice(1).replace('league','')
-        dispatch(setActiveLeague(cities.find(c => c.id === id)))
-        dispatch(setNavigation({activePanel:LEAGUE_PANEL,history:[TOURNAMENTS_PANEL,LEAGUE_PANEL]}))
+        const hash = window.location.hash
+        const {keys} = await bridge.send('VKWebAppStorageGet',{keys:['favorite']})
+        const favorite = keys.find(entrie => entrie.key === 'favorite')
+
+        if(hash)
+        {
+          const id = +hash.slice(1).replace('league','')
+          dispatch(setActiveLeague(cities.find(c => c.id === id)))
+          dispatch(setNavigation({activePanel:LEAGUE_PANEL,history:[TOURNAMENTS_PANEL,LEAGUE_PANEL]}))
+        }
+        else if(favorite && favorite.value !== '')
+        {
+          const id = +favorite.value.replace('league','')
+          dispatch(setActiveLeague(cities.find(c => c.id === id)))
+          dispatch(setNavigation({activePanel:LEAGUE_PANEL,history:[TOURNAMENTS_PANEL,LEAGUE_PANEL]}))
+        }
       }
+      catch(err){}
     }
 
     const initApp = async () => {

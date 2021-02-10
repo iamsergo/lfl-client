@@ -13,7 +13,7 @@ import {
   Placeholder,
   Snackbar,
 } from '@vkontakte/vkui';
-import { Icon16DoneCircle, Icon28ChevronRightOutline,Icon24Copy, Icon24Add } from '@vkontakte/icons';
+import { Icon16DoneCircle, Icon28ChevronRightOutline,Icon24Copy, Icon24Add, Icon28FavoriteOutline, Icon28UnfavoriteOutline } from '@vkontakte/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { goBack, goForward } from '../../store/slices/navigation';
@@ -71,6 +71,37 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
     dispatch(goForward(ADD_WIDGET_PANEL))
   }
 
+  const [openThisLeague,setOpenThisLeague] = React.useState(false)
+  React.useEffect(() => {
+    const init = async () => {
+      try
+      {
+        const {keys} = await bridge.send('VKWebAppStorageGet',{keys:['favorite']})
+        const favorite = keys.find(entrie => entrie.key === 'favorite')
+        if(!favorite)
+          setOpenThisLeague(false)
+        else
+          setOpenThisLeague(favorite.value === `league${activeLeague!.id}`)
+      }
+      catch(err){}
+    }
+
+    init()
+  },[])
+
+  const toggleOpenThisLeague = async () => {
+    try
+    {
+      await bridge.send('VKWebAppStorageSet',{
+        key:'favorite',
+        value: openThisLeague ? '' : `league${activeLeague!.id}`
+      })
+
+      setOpenThisLeague(!openThisLeague)
+    }
+    catch(err){}
+  }
+
   return(
     <Panel id={id}>
       <PanelHeader
@@ -103,6 +134,19 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
 
             <Div style={{paddingTop:0}}>
               <Card>
+                <CellButton
+                  style={{color: !openThisLeague ? 'orange' : 'red'}}
+                  before={
+                    !openThisLeague
+                      ? <Icon28FavoriteOutline style={{marginRight:8,color:'orange'}}/>
+                      : <Icon28UnfavoriteOutline style={{marginRight:8,color:'red'}}/>
+                  }
+                  onClick={toggleOpenThisLeague}
+                >{
+                  !openThisLeague
+                    ? 'Открывать сразу эту лигу'
+                    : 'Не открывать сразу эту лигу'
+                }</CellButton>
                 <CellButton
                   before={<Icon24Copy style={{marginRight:8}}/>}
                   onClick={copyLink}
