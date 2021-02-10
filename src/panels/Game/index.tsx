@@ -118,12 +118,6 @@ const GamePanel : React.FC<GamePanelProps> = ({
 
     const matchId = activeSiteType === 0 ? activeGameInfo.matchHref.replace('/match','') : ''
 
-    console.log({
-      postfix,
-      siteType : activeSiteType,
-      matchId
-    })
-
     const req = dispatch(requestGame({
       postfix,
       siteType : activeSiteType,
@@ -211,7 +205,7 @@ const GamePanel : React.FC<GamePanelProps> = ({
       
       {loading && <>
         <Div><Spinner/></Div>
-        <Placeholder>Загрузка займет ~ 12 секунд. Пожалуйста, подождите</Placeholder>
+        <Placeholder>Загрузка займет некоторое время. Пожалуйста, подождите</Placeholder>
       </>}
 
 

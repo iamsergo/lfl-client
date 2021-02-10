@@ -30,14 +30,14 @@ const GameHeader : React.FC<GameHeaderProps> = ({
   return(
     <Div className="game-header__container">
       <div className="game-header__item"
-        onClick={() => goToTeam(home)}
+        // onClick={() => goToTeam(home)}
       >
         <Avatar size={82} mode="image" src={home.logo} />
         <div style={{textAlign:'center'}}>{home.name}</div>
       </div>
-      <div className="game-header__item">{score}</div>
+      <div className="game-header__item" style={{fontSize:24}}>{score}</div>
       <div className="game-header__item"
-        onClick={() => goToTeam(away)}
+        // onClick={() => goToTeam(away)}
       >
         <Avatar size={82} mode="image" src={away.logo} />
         <div style={{textAlign:'center'}}>{away.name}</div>

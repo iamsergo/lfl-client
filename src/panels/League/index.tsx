@@ -3,8 +3,12 @@ import React from 'react';
 import bridge from '@vkontakte/vk-bridge'
 import {
   Avatar,
+  Card,
   Cell,
   CellButton,
+  Div,
+  Header,
+  Link,
   Panel,
   PanelHeader,
   PanelHeaderBack,
@@ -19,8 +23,10 @@ import { RootState } from '../../store/rootReducer';
 
 import { ADD_WIDGET_PANEL, TOURNAMENT_PANEL } from '../../constans';
 import PlainHeader from '../../components/Headers/PlainHeader';
+import ListHeader from '../../components/ListHeader';
 import { requestTournament, setActiveTournament } from '../../store/slices/tournament';
 import { Tournament } from '../../types/Tournament';
+import Actions from '../../components/Actions';
 
 interface LeaguePanelProps
 {
@@ -84,24 +90,34 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
               title={activeLeague.title}
             />
 
-            {activeLeague.tournaments.map((t,i) => {
-              return <Cell
-                key={i}
-                after={<Icon28ChevronRightOutline/>}
-                onClick={() => goToTournament(t)}
-              >{t.name}</Cell>
-            })}
+            <Div style={{paddingBottom:0}}>
+              <Card>
+                {activeLeague.tournaments.map((t,i) => {
+                  return <Cell
+                    key={i}
+                    after={<Icon28ChevronRightOutline/>}
+                    onClick={() => goToTournament(t)}
+                  >{t.name}</Cell>
+                })}
+              </Card>
+            </Div>
 
-            <CellButton
-              before={<Icon24Copy/>}
-              onClick={copyLink}
-            >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
-            {user && user.id === 612381684 &&
-              <CellButton
-                before={<Icon24Add/>}
-                onClick={goToAddWidget}
-              >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
-            }
+            <Actions openSnackbar={openSnackbar} />
+
+            <Div style={{paddingTop:0}}>
+              <Card>
+                <CellButton
+                  before={<Icon24Copy/>}
+                  onClick={copyLink}
+                >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
+                {user && user.id === 612381684 &&
+                  <CellButton
+                    before={<Icon24Add/>}
+                    onClick={goToAddWidget}
+                  >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
+                }
+              </Card>
+            </Div>
           </>
         : <Placeholder>Ничего не найдено. Попробуйте найти турнир в
           <span

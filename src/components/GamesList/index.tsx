@@ -9,6 +9,7 @@ import {
 } from '@vkontakte/vkui';
 
 import { GameInfo } from '../../types/GameInfo';
+import Score from '../Score';
 
 interface GamesListProps
 {
@@ -55,7 +56,7 @@ const GamesList : React.FC<GamesListProps> = ({
             <Avatar mode="image" src={game.homeLogo}/>
             <Avatar mode="image" src={game.awayLogo}/>
           </div>}
-          after={game.score && <Counter mode="primary" style={{padding:4,background}}>{game.score}</Counter>}
+          after={game.score && <Score background={background}>{game.score}</Score>}
           description={game.date && game.date !== '-' && 
             <div>
               <div>{game.date}, {game.time}</div>
