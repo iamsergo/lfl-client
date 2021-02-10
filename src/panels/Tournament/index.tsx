@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { goBack, goForward } from '../../store/slices/navigation';
 import { RootState } from '../../store/rootReducer';
 import { clearActiveTournament, setActiveTab } from '../../store/slices/tournament';
-import { requestSquad, setActiveTeam} from '../../store/slices/team';
+import { setActiveTeam} from '../../store/slices/team';
 import { setActiveGameInfo } from '../../store/slices/game';
 
 import PlainHeader from '../../components/Headers/PlainHeader';
@@ -39,7 +39,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
   id,
 }) => {
   const dispatch = useDispatch()
-  const {activeTournament,activeTournamentName,activeTournamentCity,activeTab,activeSiteType,activeVkHref} = useSelector((s:RootState) => s.tournament)
+  const {activeTournament,activeTournamentName,activeTournamentCity,activeTab,activeSiteType} = useSelector((s:RootState) => s.tournament)
 
   const goToTeam = (team : ClubInfo) => {
     dispatch(setActiveTeam(team))
@@ -98,7 +98,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
           />
           {
             activeTournament.table.map((team,i) => {
-              if(team.title === '') return
+              if(team.title === '') return null
 
               return team.title
                 ? <Cell

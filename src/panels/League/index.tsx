@@ -7,8 +7,6 @@ import {
   Cell,
   CellButton,
   Div,
-  Header,
-  Link,
   Panel,
   PanelHeader,
   PanelHeaderBack,
@@ -23,7 +21,6 @@ import { RootState } from '../../store/rootReducer';
 
 import { ADD_WIDGET_PANEL, TOURNAMENT_PANEL } from '../../constans';
 import PlainHeader from '../../components/Headers/PlainHeader';
-import ListHeader from '../../components/ListHeader';
 import { requestTournament, setActiveTournament } from '../../store/slices/tournament';
 import { Tournament } from '../../types/Tournament';
 import Actions from '../../components/Actions';

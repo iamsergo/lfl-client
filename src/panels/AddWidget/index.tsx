@@ -5,7 +5,6 @@ import {
   Button,
   Div,
   FormItem,
-  Gallery,
   Link,
   NativeSelect,
   Panel,
@@ -52,7 +51,6 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
   const [activeTournament, setActiveTournament] = React.useState<number>(+activeLeague!.tournaments[0].id)
   const [groups,setGroups] = React.useState<{id:number,name:string,photo_50:string}[]>([])
   const [accessToken,setAccessToken] = React.useState('')
-  const [appInGroup,setAppInGroup] = React.useState(false)
   
   const requestGroups = async () => {
     try
@@ -107,8 +105,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       })
 
       const createMatch = ({
-        date, home, away, score, url
-      } : {
+        date, home, away, score      } : {
         date : string,
         home : string,
         away : string,

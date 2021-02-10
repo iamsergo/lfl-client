@@ -8,15 +8,12 @@ import {
   Cell,
   Div,
   Header,
-  List,
   Panel,
   PanelHeader,
   Snackbar,
-  usePlatform,
 } from '@vkontakte/vkui';
 import { 
   Icon28ChevronRightOutline, 
-  Icon28ChevronDownOutline,
   Icon28FavoriteCircleFillYellow,
   Icon28AddCircleFillBlue,
   Icon28ReplyCircleFillGreen,
@@ -27,13 +24,10 @@ import {
 
 import { useDispatch } from 'react-redux';
 import { goForward } from '../../store/slices/navigation';
-import { requestTournament, setActiveTournament } from '../../store/slices/tournament';
 
-import { LEAGUE_PANEL, TOURNAMENT_PANEL } from '../../constans';
+import { LEAGUE_PANEL } from '../../constans';
 
 import { CityInfo } from '../../types/CityInfo';
-import { Tournament } from '../../types/Tournament';
-import { toggleCollapse } from '../../store/slices/tournaments';
 import { setActiveLeague } from '../../store/slices/league';
 
 interface TournamentsPanelProps

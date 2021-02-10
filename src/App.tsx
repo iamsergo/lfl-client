@@ -1,13 +1,13 @@
 import React from 'react';
 
 import bridge from '@vkontakte/vk-bridge';
-import {AdaptivityProvider, AppRoot, ConfigProvider, ScreenSpinner, View} from '@vkontakte/vkui';
+import {AppRoot, ConfigProvider, ScreenSpinner, View} from '@vkontakte/vkui';
 
 import TournamentPanel from './panels/Tournament';
 import TeamPanel from './panels/Team';
 import GamePanel from './panels/Game';
 import TournamentsPanel from './panels/Tournaments';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
 import { ADD_WIDGET_PANEL, GAME_PANEL, LEAGUE_PANEL, TEAM_PANEL, TOURNAMENTS_PANEL, TOURNAMENT_PANEL } from './constans';
 import { requestTournaments } from './store/slices/tournaments';

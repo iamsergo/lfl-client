@@ -25,7 +25,7 @@ const GameHeader : React.FC<GameHeaderProps> = ({
   score,
   onGoToTeam,
 }) => {
-  const goToTeam = (team : Team) => onGoToTeam(team as ClubInfo)
+  // const goToTeam = (team : Team) => onGoToTeam(team as ClubInfo)
 
   return(
     <Div className="game-header__container">

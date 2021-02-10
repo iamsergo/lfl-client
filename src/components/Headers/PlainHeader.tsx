@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {Avatar, Div, Link} from '@vkontakte/vkui';
-import { Icon24Globe } from '@vkontakte/icons';
 
 interface PlainHeaderProps
 {

@@ -2,10 +2,9 @@ import React from 'react';
 
 import {
   Group, 
-  Avatar, 
+  Avatar,
   Cell, 
-  Header, 
-  Counter,
+  Header,
 } from '@vkontakte/vkui';
 
 import { GameInfo } from '../../types/GameInfo';

@@ -1,24 +1,18 @@
 import React from 'react';
 
 import {
-  Cell,
   Div,
-  HorizontalScroll,
-  List,
   Link,
   Panel,
   PanelHeader,
   PanelHeaderBack,
   Placeholder,
-  Spinner,
-  Tabs,
-  TabsItem
-} from '@vkontakte/vkui';
+  Spinner} from '@vkontakte/vkui';
 
 import { useSelector } from 'react-redux';
 import { goBack, goForward } from '../../store/slices/navigation';
 import { RootState } from '../../store/rootReducer';
-import { goBackToTeam, requestSquad, setActiveTeam } from '../../store/slices/team';
+import { goBackToTeam, setActiveTeam } from '../../store/slices/team';
 import { clearActiveGame, goForwardToGame, requestGame } from '../../store/slices/game';
 import {useAppDispatch} from '../../store/store';
 
@@ -29,9 +23,7 @@ import EventRow from '../../components/EventRow';
 import { TEAM_PANEL } from '../../constans';
 
 import { ClubInfo } from '../../types/ClubInfo';
-import Prediction from '../../components/Prediction';
-import { requestDoPrediction, requestPredictions, clearPredictionsInfo } from '../../store/slices/predictions';
-import { addPrediction } from '../../store/slices/user';
+import { requestPredictions, clearPredictionsInfo } from '../../store/slices/predictions';
 import { nowLessThen } from '../../utils/nowLessThen';
 
 interface GamePanelProps
@@ -39,7 +31,7 @@ interface GamePanelProps
   id : string
 }
 
-const TABS = [ 'События', 'Составы',]
+// const TABS = [ 'События', 'Составы',]
 
 const GamePanel : React.FC<GamePanelProps> = ({
   id,
@@ -49,11 +41,9 @@ const GamePanel : React.FC<GamePanelProps> = ({
   const {activeGameInfo,activeGameEvents,loading, error} = useSelector((s:RootState) => s.game)
   const {activeTournament,activeSiteType,activeDivisionId} = useSelector((s:RootState) => s.tournament)
   const {user} = useSelector((s:RootState) => s.user)
-  const {predictionsInfo, loading : loadingPrediction} = useSelector((s:RootState) => s.predictions)
 
-  const [activeTab, setActiveTab] = React.useState(0)
-  const [activeTeamTab, setActiveTeamTab] = React.useState(0)
-  const [userPrediction, setUserPrediction] = React.useState<0|1|null>(null)
+  const [activeTab] = React.useState(0)
+  const [, setUserPrediction] = React.useState<0|1|null>(null)
 
   const canPredict = nowLessThen(
     activeGameInfo.date.split(' ')[0].split('.').map(s=>+s),
@@ -70,8 +60,6 @@ const GamePanel : React.FC<GamePanelProps> = ({
   }
 
   const goToTeam = (team : ClubInfo) => {
-    const tournamentId = activeTournament!.tournamentId
-    const clubId = team.href.replace('/club','')
 
     dispatch(goForwardToGame())
     
@@ -84,13 +72,6 @@ const GamePanel : React.FC<GamePanelProps> = ({
     // dispatch(requestSquad({tournamentId, clubId}))
   }
 
-  const doPredict = (prediction : 0 | 1) => {
-    const matchId = +activeGameInfo.matchHref.replace('/match','').replace('/empty_protocol','')
-    dispatch(addPrediction({matchId, prediction}))
-    dispatch(requestDoPrediction({ matchId, prediction, userId : user!.id, }))
-      .then(_ => dispatch(requestPredictions(matchId)))
-    setUserPrediction(prediction)
-  }
 
   React.useEffect(() => {
     if(activeGameEvents) return
@@ -140,7 +121,6 @@ const GamePanel : React.FC<GamePanelProps> = ({
     logo : activeGameInfo.awayLogo,
   }
 
-  const noInformation = activeGameEvents && !activeGameEvents.squads.some(s => s.length > 0)
 
   return(
     <Panel id={id}>

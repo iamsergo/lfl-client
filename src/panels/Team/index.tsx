@@ -2,13 +2,10 @@ import React from 'react';
 
 
 import {
-  Div,
-  Group,
   HorizontalScroll,
   Panel,
   PanelHeader,
   PanelHeaderBack,
-  Spinner,
   Tabs,
   TabsItem
 } from '@vkontakte/vkui';
@@ -21,7 +18,6 @@ import { goBackToGame, setActiveGameInfo } from '../../store/slices/game';
 
 import PlainHeader from '../../components/Headers/PlainHeader';
 import GamesList from '../../components/GamesList';
-import TableRow from '../../components/Table/TableRow';
 
 import { GameInfo } from '../../types/GameInfo';
 
@@ -39,9 +35,9 @@ const TeamPanel : React.FC<TeamPanelProps> = ({
   id,
 }) => {
   const dispatch = useDispatch()
-  const { activeTeamSquad, loading, activeTeam, activeTab } = useSelector((s:RootState) => s.team)
+  const { activeTeam, activeTab } = useSelector((s:RootState) => s.team)
   const {history} = useSelector((s:RootState) => s.navigation)
-  const {activeTournament,activeTournamentCity,activeTournamentName} = useSelector((s:RootState) => s.tournament)
+  const {activeTournament,activeTournamentCity} = useSelector((s:RootState) => s.tournament)
 
   const goToBack = () => {
     const isToGame = history[history.length-2] === 'game'
