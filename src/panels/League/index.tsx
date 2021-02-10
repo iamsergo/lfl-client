@@ -107,14 +107,16 @@ const LeaguePanel : React.FC<LeaguePanelProps> = ({
             <Div style={{paddingTop:0}}>
               <Card>
                 <CellButton
-                  before={<Icon24Copy/>}
+                  before={<Icon24Copy style={{marginRight:8}}/>}
                   onClick={copyLink}
-                >&nbsp;&nbsp;Скопировать ссылку на лигу</CellButton>
+                  description="Прямая ссылка на эту страницу"
+                >Скопировать ссылку на лигу</CellButton>
                 {user && user.id === 612381684 &&
                   <CellButton
-                    before={<Icon24Add/>}
+                    before={<Icon24Add style={{marginRight:8}}/>}
                     onClick={goToAddWidget}
-                  >&nbsp;&nbsp;Добавить виджет в группу</CellButton>
+                    description="Для администраторов групп"
+                  >Добавить виджет в группу</CellButton>
                 }
               </Card>
             </Div>

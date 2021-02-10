@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactEventHandler } from 'react';
 
 import bridge from '@vkontakte/vk-bridge'
 import {CellButton, Card, Div} from '@vkontakte/vkui';
 import {
-  Icon28AddCircleFillBlue,
+  Icon20AddCircleFillBlue,
   Icon28FavoriteCircleFillYellow,
   Icon28HomeOutline,
   Icon28ReplyCircleFillGreen,
-  Icon28Users3Outline
+  Icon28UsersCircleFillGray
 } from '@vkontakte/icons';
 
 
@@ -31,7 +31,9 @@ const Actions: React.FC<ActionsProps> = ({
       .catch(err=>err)
   }
 
-  const joinToGroup = () => {
+  const joinToGroup : ReactEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
     bridge.send('VKWebAppJoinGroup',{group_id:GROUP_ID})
       .then(_=>openSnackbar('Вы вступили. Спасибо!'))
       .catch(err=>err)
@@ -61,8 +63,9 @@ const Actions: React.FC<ActionsProps> = ({
     <Div>
       <Card>
         <CellButton
-          before={<Icon28Users3Outline style={{marginRight:8}}/>}
+          before={<Icon28UsersCircleFillGray style={{marginRight:8}}/>}
           onClick={goToGroup}
+          after={<Icon20AddCircleFillBlue onClick={joinToGroup}/>}
         >Группа приложения</CellButton>
         <CellButton
           before={<Icon28FavoriteCircleFillYellow style={{marginRight:8}}/>}
