@@ -126,7 +126,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
           .map(([tour, games],i) => {
             return <GamesList
               key={i}
-              header={`${tour} ТУР`}
+              header={`${tour}${activeSiteType === 0 ? ' ТУР' : ''}`}
               games={games}
               // onGoToGame={goToGame} // !!!!
             />
@@ -138,7 +138,7 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
           .map(([tour, games],i) => {
             return <GamesList
               key={i}
-              header={`${tour} ТУР`}
+              header={`${tour}${activeSiteType === 0 ? ' ТУР' : ''}`}
               games={games}
               onGoToGame={goToGame}
             />
