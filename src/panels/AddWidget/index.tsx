@@ -21,6 +21,7 @@ import { RootState } from '../../store/rootReducer';
 import api from '../../api';
 import { TournamentInfo } from '../../types/TournamentInfo';
 import { BASE_URL } from '../../api/BASE_URL';
+import { ClubInfo } from '../../types/ClubInfo'
 
 interface AddWidgetPanelProps
 {
@@ -29,6 +30,11 @@ interface AddWidgetPanelProps
 
 const APP_ID = 7746401
 const VERSION = '5.126'
+
+const WIDGET_TYPES = [
+  {id : 'table', name : 'Таблица'},
+  {id : 'matches', name : 'Матчи'}
+]
 
 const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
   id,
@@ -51,7 +57,8 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
   const [activeTournament, setActiveTournament] = React.useState<number>(+activeLeague!.tournaments[0].id)
   const [groups,setGroups] = React.useState<{id:number,name:string,photo_50:string}[]>([])
   const [accessToken,setAccessToken] = React.useState('')
-  
+  const [activeWidgetType,setActiveWidgetType] = React.useState(WIDGET_TYPES[0].id)
+
   const requestGroups = async () => {
     try
     {
@@ -95,6 +102,10 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
     setActiveTournament(+e.currentTarget.value)
   }
 
+  const changeWidgetType = (e : React.FormEvent<HTMLSelectElement>) => {
+    setActiveWidgetType(e.currentTarget.value)
+  }
+
   const addWidget = async () => {
     setLoading(true)
     try
@@ -103,51 +114,83 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         tournamentId:activeTournament!,
         siteType:activeLeague!.tournaments[0].siteType,
       })
-
-      const createMatch = ({
-        date, home, away, score      } : {
-        date : string,
-        home : string,
-        away : string,
-        score : number[]
-        url : string
-      }) => {
-        return {
-          state : date,
-          team_a : { name : home },
-          team_b : { name : away },
-          score : { team_a : score[0], team_b : score[1] }
+      const leagueLink = `https://vk.com/app7746401#league${activeLeague?.id}`
+      
+      if(activeWidgetType === 'matches')
+      {
+        const createMatch = ({
+          date, home, away, score
+        } : {
+          date : string,
+          home : string,
+          away : string,
+          score : number[]
+          url : string
+        }) => {
+          return {
+            state : date,
+            team_a : { name : home },
+            team_b : { name : away },
+            score : { team_a : score[0], team_b : score[1] }
+          }
         }
+
+        const games = tournament.calendar.length !== 0 ? tournament.calendar.slice(0,4) : tournament.results.slice(0,4)
+        const matches = games.map(game => {
+          const score = !game.score ? [0,0] : game.score.split(':').map(s=>+s)
+          const date = game.date && game.date !== '-'
+            ? `${game.date.replace('.2021','').replace('.2020','').replace(' ','')}${game.time ? `, ${game.time}` : ''}`
+            : (game.score ? 'Итог' : 'Информации нет')
+          return createMatch({
+            date,
+            home:game.homeName,
+            away:game.awayName,
+            score,
+            url : leagueLink,
+          })
+        })
+
+        const data = JSON.stringify({
+          title: "Матчи",
+          title_url: leagueLink,
+          more: "Весь список",
+          more_url: leagueLink,
+          matches,
+        })
+
+        const code = `return ${data};`
+        
+        await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'matches', code,})
+      }
+      else if(activeWidgetType === 'table')
+      {
+        const head = [
+          {text : 'Команда', align : 'left'},
+          {text : 'В', align : 'right'},
+          {text : 'Н', align : 'right'},
+          {text : 'П', align : 'right'},
+          {text : 'О', align : 'right'},
+        ]
+        const body = tournament.table.slice(1,11).map(row => {
+          const keys : (keyof ClubInfo)[] = ['name','win','draw','lose','points']
+          
+          return keys.map(key => ({ text : ''+row[key] }) )
+        })
+
+        const data = {
+          title: "Таблица",
+          title_url: leagueLink,
+          more : 'Весь список',
+          more_url : leagueLink,
+          head,
+          body,
+        }
+        const code = `return ${JSON.stringify(data)};`
+
+        await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'table', code,})
       }
 
-      const leagueLink = `https://vk.com/app7746401#league${activeLeague?.id}`
-
-      const games = tournament.calendar.length !== 0 ? tournament.calendar.slice(0,4) : tournament.results.slice(0,4)
-      const matches = games.map(game => {
-        const score = !game.score ? [0,0] : game.score.split(':').map(s=>+s)
-        const date = game.date && game.date !== '-'
-          ? `${game.date.replace('.2021','').replace('.2020','').replace(' ','')}${game.time ? `, ${game.time}` : ''}`
-          : (game.score ? 'Итог' : 'Информации нет')
-        return createMatch({
-          date,
-          home:game.homeName,
-          away:game.awayName,
-          score,
-          url : leagueLink,
-        })
-      })
-
-      const data = JSON.stringify({
-        title: "Матчи",
-        title_url: leagueLink,
-        more: "Весь список",
-        more_url: leagueLink,
-        matches,
-      })
-
-      const code = `return ${data};`
-
-      await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'matches', code,})
+      
 
       await api.addWidget({
         user_id : user!.id,
@@ -157,7 +200,8 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
         v : VERSION,
         league_id : activeLeague!.id,
         tournament_id : activeTournament!,
-        site_type : activeLeague!.tournaments[0].siteType
+        site_type : activeLeague!.tournaments[0].siteType,
+        type : activeWidgetType,
       })
       setStep(s=>s+1)
     }
@@ -253,7 +297,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       </>}
 
       {step === 2 && !loading && <>
-          <FormItem top="Выберите лигу для отображения">
+        <FormItem top="Выберите лигу для отображения">
           <NativeSelect
             onChange={changeTournament}
           >
@@ -262,6 +306,15 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
             })}
           </NativeSelect>
         </FormItem>
+        <FormItem top="Выберите тип виджета">
+          <NativeSelect
+            onChange={changeWidgetType}
+          >
+            {WIDGET_TYPES.map(w => {
+              return <option key={w.id} value={w.id}>{w.name}</option>
+            })}
+          </NativeSelect>
+        </FormItem>        
         
         <Button
           before={'⚠️'}

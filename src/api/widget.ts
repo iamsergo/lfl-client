@@ -9,6 +9,7 @@ export const addWidget = async ({
   site_type,
   tournament_id,
   league_id,
+  type,
 } : {
   user_id : number,
   group_id: number,
@@ -18,11 +19,12 @@ export const addWidget = async ({
   site_type: number,
   tournament_id : number,
   league_id : number,
+  type : string,
 }) => {
   const url = `${BASE_URL}/widgets`
   const res = await fetch(url,{
     method : 'PUT',
-    body: JSON.stringify({user_id,group_id,app_id,access_token,v,site_type,tournament_id,league_id}),
+    body: JSON.stringify({user_id,group_id,app_id,access_token,v,site_type,tournament_id,league_id,type}),
     headers : {'Content-Type': 'application/json;charset=utf-8'}
   })
 
