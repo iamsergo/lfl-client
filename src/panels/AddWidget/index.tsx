@@ -55,6 +55,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
 
   const [activeGroup, setActiveGroup] = React.useState<number|null>(null)
   const [activeTournament, setActiveTournament] = React.useState<number>(+activeLeague!.tournaments[0].id)
+  const [activeSiteType, setActiveSiteType] = React.useState(activeLeague!.tournaments[0].siteType)
   const [groups,setGroups] = React.useState<{id:number,name:string,photo_50:string}[]>([])
   const [accessToken,setAccessToken] = React.useState('')
   const [activeWidgetType,setActiveWidgetType] = React.useState(WIDGET_TYPES[0].id)
@@ -98,10 +99,6 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
     setActiveGroup(+e.currentTarget.value)
   }
 
-  const changeTournament = (e : React.FormEvent<HTMLSelectElement>) => {
-    setActiveTournament(+e.currentTarget.value)
-  }
-
   const changeWidgetType = (e : React.FormEvent<HTMLSelectElement>) => {
     setActiveWidgetType(e.currentTarget.value)
   }
@@ -112,7 +109,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
     {
       const tournament : TournamentInfo = await api.getTournament({
         tournamentId:activeTournament!,
-        siteType:activeLeague!.tournaments[0].siteType,
+        siteType:activeSiteType,
       })
       const leagueLink = `https://vk.com/app7746401#league${activeLeague?.id}`
       
@@ -171,7 +168,8 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
           {text : 'П', align : 'right'},
           {text : 'О', align : 'right'},
         ]
-        const body = tournament.table.slice(1,11).map(row => {
+
+        const body = tournament.table.slice(activeSiteType === 0 ? 0 : 1, 11).map(row => {
           const keys : (keyof ClubInfo)[] = ['name','win','draw','lose','points']
           
           return keys.map(key => ({ text : ''+row[key] }) )
@@ -189,8 +187,6 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
 
         await bridge.send('VKWebAppShowCommunityWidgetPreviewBox',{group_id : activeGroup!, type : 'table', code,})
       }
-
-      
 
       await api.addWidget({
         user_id : user!.id,
@@ -299,7 +295,11 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
       {step === 2 && !loading && <>
         <FormItem top="Выберите лигу для отображения">
           <NativeSelect
-            onChange={changeTournament}
+            onChange={e => {
+              const tournamentId = +e.currentTarget.value
+              setActiveTournament(tournamentId)
+              setActiveSiteType(activeLeague!.tournaments.find(t => +t.id === tournamentId)!.siteType)
+            }}
           >
             {activeLeague!.tournaments.map(t => {
               return <option key={t.id} value={t.id}>{t.name}</option>
