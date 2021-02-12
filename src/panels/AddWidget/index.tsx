@@ -169,11 +169,13 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
           {text : 'О', align : 'right'},
         ]
 
-        const body = tournament.table.slice(activeSiteType === 0 ? 0 : 1, 11).map(row => {
-          const keys : (keyof ClubInfo)[] = ['name','win','draw','lose','points']
-          
-          return keys.map(key => ({ text : ''+row[key] }) )
-        })
+        const body = tournament.table
+          .slice(activeSiteType === 0 ? 0 : 1, 11 - (activeSiteType === 0 ? 1 : 0))
+          .map(row => {
+            const keys : (keyof ClubInfo)[] = ['name','win','draw','lose','points']
+            
+            return keys.map(key => ({ text : ''+row[key] }) )
+          })
 
         const data = {
           title: "Таблица",
@@ -314,7 +316,7 @@ const AddWidgetPanel : React.FC<AddWidgetPanelProps> = ({
               return <option key={w.id} value={w.id}>{w.name}</option>
             })}
           </NativeSelect>
-        </FormItem>        
+        </FormItem>
         
         <Button
           before={'⚠️'}
