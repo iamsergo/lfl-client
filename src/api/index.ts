@@ -1,4 +1,4 @@
-import {getGames} from './games'
+import {getGames, editScore} from './games'
 import {getTournaments, getTournament} from './tournaments'
 import {getSquads} from './squads'
 import {getPredictionsByMatch,doPrediction} from './predictions'
@@ -7,6 +7,7 @@ import {addWidget} from './widget'
 
 export default {
   getGames,
+  editScore,
   getTournaments,
   getTournament,
   getSquads,

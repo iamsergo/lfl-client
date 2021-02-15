@@ -17,6 +17,7 @@ import { RootState } from '../../store/rootReducer';
 import { clearActiveTournament, setActiveTab } from '../../store/slices/tournament';
 import { setActiveTeam} from '../../store/slices/team';
 import { setActiveGameInfo } from '../../store/slices/game';
+import { setActiveGame, setActiveModal } from '../../store/slices/modal';
 
 import PlainHeader from '../../components/Headers/PlainHeader';
 import GamesList from '../../components/GamesList';
@@ -26,7 +27,7 @@ import { GameInfo } from '../../types/GameInfo';
 import { ClubInfo } from '../../types/ClubInfo';
 
 import { getGamesByTours } from '../../utils/getGamesByTour';
-import { GAME_PANEL, TEAM_PANEL } from '../../constans';
+import { EDIT_GAME_MODAL, GAME_PANEL, TEAM_PANEL } from '../../constans';
 
 interface TournamentPanelProps
 {
@@ -58,6 +59,12 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
     dispatch(goBack())
     dispatch(clearActiveTournament())
     dispatch(setActiveTab(0))
+  }
+
+  const editScore = (g : GameInfo) => {
+    console.log('GAME : ', g)
+    dispatch(setActiveGame(g))
+    dispatch(setActiveModal(EDIT_GAME_MODAL))
   }
 
   return(
@@ -128,7 +135,8 @@ const TournamentPanel : React.FC<TournamentPanelProps> = ({
               key={i}
               header={`${tour}${activeSiteType === 0 ? ' ТУР' : ''}`}
               games={games}
-              // onGoToGame={goToGame} // !!!!
+              editable={true}
+              onGoToGame={editScore}
             />
           })
       }

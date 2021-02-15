@@ -6,6 +6,7 @@ import {
   Cell, 
   Header,
 } from '@vkontakte/vkui';
+import { Icon28EditOutline } from '@vkontakte/icons';
 
 import { GameInfo } from '../../types/GameInfo';
 import Score from '../Score';
@@ -15,6 +16,7 @@ interface GamesListProps
   games : GameInfo[]
   header ?: string
   teamHref ?: string
+  editable ?: boolean
   onGoToGame ?: (game : GameInfo) => void
 }
 
@@ -22,6 +24,7 @@ const GamesList : React.FC<GamesListProps> = ({
   games,
   header,
   teamHref,
+  editable = false,
   onGoToGame,
 }) => {
   return(
@@ -48,14 +51,18 @@ const GamesList : React.FC<GamesListProps> = ({
         }
 
         return <Cell
-          disabled={!onGoToGame || (game.date === '-' && !game.score)}
+          disabled={!onGoToGame || (game.date === '-' && !game.score) || (editable && !!game.score)}
           // disabled={true}
           key={i}
           before={<div style={{display:'flex',marginRight:8,}}>
             <Avatar mode="image" src={game.homeLogo}/>
             <Avatar mode="image" src={game.awayLogo}/>
           </div>}
-          after={game.score && <Score background={background}>{game.score}</Score>}
+          after={
+            editable && game.date !== '-' && game.time && !game.score
+              ? <Icon28EditOutline/>
+              : game.score && <Score background={background}>{game.score}</Score> 
+          }
           description={game.date && game.date !== '-' && 
             <div>
               <div>{game.date}, {game.time}</div>

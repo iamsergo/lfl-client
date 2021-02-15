@@ -16,7 +16,7 @@ interface GameHeaderProps
   home : Team
   away : Team
   score : string
-  onGoToTeam : (team : ClubInfo) => void
+  onGoToTeam ?: (team : ClubInfo) => void
 }
 
 const GameHeader : React.FC<GameHeaderProps> = ({

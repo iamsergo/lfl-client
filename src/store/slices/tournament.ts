@@ -54,6 +54,14 @@ const tournamentSlice = createSlice({
     {
       state.activeTab = action.payload
     },
+    setEditedGame(state,action)
+    {
+      const {matchHref, score} = action.payload
+
+      state.activeTournament!.calendar = state.activeTournament!.calendar.map(g => {
+        return g.matchHref === matchHref ? {...g, score} : g
+      })
+    },
   },
   extraReducers(builder)
   {
@@ -80,5 +88,6 @@ export const {
   clearActiveTournament,
   setActiveTournament,
   setActiveTab,
+  setEditedGame,
 } = tournamentSlice.actions
 export default tournamentSlice.reducer
